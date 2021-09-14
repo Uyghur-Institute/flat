@@ -23,7 +23,7 @@ import {
     stopClass,
     stopRecordRoom,
 } from "../apiMiddleware/flatServer";
-import { RoomStatus } from "../apiMiddleware/flatServer/constants";
+import { RoomStatus, RoomType } from "../apiMiddleware/flatServer/constants";
 import { RoomItem, roomStore } from "./RoomStore";
 import { globalStore } from "./GlobalStore";
 import { NODE_ENV } from "../constants/Process";
@@ -150,6 +150,7 @@ export class ClassRoomStore {
 
         this.whiteboardStore = new WhiteboardStore({
             isCreator: this.isCreator,
+            getRoomType: () => this.roomInfo?.roomType || RoomType.BigClass,
         });
 
         this.shareScreenStore = new ShareScreenStore(this.roomUUID);
@@ -268,7 +269,7 @@ export class ClassRoomStore {
                 await this.startRecording();
             }
         } catch (e) {
-            errorTips(e);
+            errorTips(e as Error);
         }
     };
 
@@ -617,7 +618,7 @@ export class ClassRoomStore {
             // so that the component won't unmount before sending commands
             this.updateRoomStatus(roomStatus);
         } catch (e) {
-            errorTips(e);
+            errorTips(e as Error);
             console.error(e);
         }
         this.updateRoomStatusLoading(RoomStatusLoadingType.Null);

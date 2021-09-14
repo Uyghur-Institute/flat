@@ -1,16 +1,15 @@
-import PageController from "@netless/page-controller";
-import PreviewController from "@netless/preview-controller";
+import "@netless/window-manager/dist/style.css";
+import "./Whiteboard.less";
+
 import RedoUndo from "@netless/redo-undo";
 import ToolBox from "@netless/tool-box";
-import ZoomController from "@netless/zoom-controller";
+import { WindowManager } from "@netless/window-manager";
 import classNames from "classnames";
 import { observer } from "mobx-react-lite";
-import React, { useCallback } from "react";
-import { RoomPhase } from "white-web-sdk";
-import pagesSVG from "../assets/image/pages.svg";
+import React, { useCallback, useEffect, useState } from "react";
 import { WhiteboardStore } from "../stores/WhiteboardStore";
 import { isSupportedImageType, onDropImage } from "../utils/dnd/image";
-import "./Whiteboard.less";
+import { ScenesController } from "../../../../packages/flat-components/src";
 
 export interface WhiteboardProps {
     whiteboardStore: WhiteboardStore;
@@ -19,17 +18,63 @@ export interface WhiteboardProps {
 export const Whiteboard = observer<WhiteboardProps>(function Whiteboard({ whiteboardStore }) {
     const { room } = whiteboardStore;
 
-    const bindWhiteboard = useCallback(
-        (ref: HTMLDivElement) => {
-            if (room) {
-                room.bindHtmlElement(ref);
-                if (room.phase === RoomPhase.Connected) {
-                    room.scalePptToFit();
-                }
+    const [whiteboardEl, setWhiteboardEl] = useState<HTMLElement | null>(null);
+    const [collectorEl, setCollectorEl] = useState<HTMLElement | null>(null);
+
+    useEffect(() => {
+        const mountWindowManager = async (): Promise<void> => {
+            if (whiteboardEl && collectorEl && room) {
+                await WindowManager.mount({
+                    room,
+                    container: whiteboardEl,
+                    cursor: true,
+                    collectorContainer: collectorEl,
+                    /* the containerSizeRatio config limit width and height ratio of windowManager
+                     for make sure windowManager sync in whiteboard. */
+                    containerSizeRatio: whiteboardStore.getWhiteboardRatio(),
+                    collectorStyles: {
+                        position: "absolute",
+                        right: "10px",
+                        bottom: "60px",
+                    },
+                    chessboard: false,
+                });
+                whiteboardStore.onMainViewModeChange();
+                whiteboardStore.onWindowManagerBoxStateChange();
             }
-        },
-        [room],
-    );
+        };
+
+        void mountWindowManager();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [whiteboardEl, collectorEl, room]);
+
+    useEffect(() => {
+        if (whiteboardEl) {
+            whiteboardOnResize();
+            window.addEventListener("resize", whiteboardOnResize);
+        }
+        return () => {
+            window.removeEventListener("resize", whiteboardOnResize);
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [whiteboardEl]);
+
+    useEffect(() => {
+        whiteboardOnResize();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [whiteboardStore.isRightSideClose]);
+
+    const bindWhiteboard = useCallback((ref: HTMLDivElement | null) => {
+        if (ref) {
+            setWhiteboardEl(ref);
+        }
+    }, []);
+
+    const bindCollector = useCallback((ref: HTMLDivElement | null) => {
+        if (ref) {
+            setCollectorEl(ref);
+        }
+    }, []);
 
     const onDragOver = useCallback(
         (event: React.DragEvent<HTMLDivElement>) => {
@@ -57,6 +102,62 @@ export const Whiteboard = observer<WhiteboardProps>(function Whiteboard({ whiteb
         [room],
     );
 
+    const whiteboardOnResize = (): void => {
+        if (whiteboardEl) {
+            const whiteboardRatio = whiteboardStore.getWhiteboardRatio();
+
+            if (whiteboardStore.smallClassRatio === whiteboardRatio) {
+                const classRoomRightSideWidth = whiteboardStore.isRightSideClose ? 0 : 304;
+                const classRoomTopBarHeight = 182;
+                const classRoomMinWidth = 1130;
+                const classRoomMinHeight = 610;
+
+                const whiteboardWidth = Math.min(
+                    window.innerWidth - classRoomRightSideWidth,
+                    (window.innerHeight - classRoomTopBarHeight) / whiteboardRatio,
+                );
+
+                const whiteboardHeight = whiteboardWidth * whiteboardRatio;
+
+                whiteboardEl.style.width = `${whiteboardWidth}px`;
+                whiteboardEl.style.height = `${whiteboardHeight}px`;
+
+                if (
+                    window.innerHeight < classRoomMinHeight ||
+                    window.innerWidth < classRoomMinWidth
+                ) {
+                    const whiteboardMinWidth = classRoomMinWidth - classRoomRightSideWidth;
+                    whiteboardEl.style.minWidth = `${whiteboardMinWidth}px`;
+                    whiteboardEl.style.minHeight = `${whiteboardMinWidth * whiteboardRatio}px`;
+                }
+            } else {
+                const classRoomRightSideWidth = whiteboardStore.isRightSideClose ? 0 : 304;
+                const classRoomTopBarHeight = 50;
+                const classRoomMinWidth = 1020;
+                const classRoomMinHeight = 522;
+
+                const whiteboardWidth = Math.min(
+                    window.innerWidth - classRoomRightSideWidth,
+                    (window.innerHeight - classRoomTopBarHeight) / whiteboardRatio,
+                );
+
+                const whiteboardHeight = whiteboardWidth * whiteboardRatio;
+
+                whiteboardEl.style.width = `${whiteboardWidth}px`;
+                whiteboardEl.style.height = `${whiteboardHeight}px`;
+
+                if (
+                    window.innerHeight < classRoomMinHeight ||
+                    window.innerWidth < classRoomMinWidth
+                ) {
+                    const whiteboardMinWidth = classRoomMinWidth - classRoomRightSideWidth;
+                    whiteboardEl.style.minWidth = `${whiteboardMinWidth}px`;
+                    whiteboardEl.style.minHeight = `${whiteboardMinWidth * whiteboardRatio}px`;
+                }
+            }
+        }
+    };
+
     return (
         room && (
             <div
@@ -66,38 +167,33 @@ export const Whiteboard = observer<WhiteboardProps>(function Whiteboard({ whiteb
                 onDragOver={onDragOver}
                 onDrop={onDrop}
             >
-                <div className="zoom-controller-box">
-                    <ZoomController room={room} />
-                </div>
                 <div className="whiteboard-writable-area">
                     <div className="tool-box-out">
                         <ToolBox room={room} />
                     </div>
-                    <div className="redo-undo-box">
+                    <div
+                        className={classNames("redo-undo-box", {
+                            "is-disabled": whiteboardStore.isWindowMaximization,
+                        })}
+                    >
                         <RedoUndo room={room} />
                     </div>
-                    <div className="page-controller-box">
-                        <div className="page-controller-mid-box">
-                            <PageController room={room} />
-                            <div
-                                className="page-preview-cell"
-                                onClick={whiteboardStore.showPreviewPanel}
-                            >
-                                <img src={pagesSVG} alt={"pages"} />
-                            </div>
-                        </div>
+                    <div
+                        className={classNames("page-controller-box", {
+                            "is-disabled": whiteboardStore.isWindowMaximization,
+                        })}
+                    >
+                        <ScenesController
+                            addScene={whiteboardStore.addMainViewScene}
+                            preScene={whiteboardStore.preMainViewScene}
+                            nextScene={whiteboardStore.nextMainViewScene}
+                            currentSceneIndex={whiteboardStore.currentSceneIndex}
+                            scenesCount={whiteboardStore.scenesCount}
+                            disabled={whiteboardStore.isFocusWindow}
+                        />
                     </div>
-                    <PreviewController
-                        handlePreviewState={whiteboardStore.setPreviewPanel}
-                        isVisible={whiteboardStore.isShowPreviewPanel}
-                        room={room}
-                    />
-                    {/* <DocsCenter
-                        handleDocCenterState={whiteboardStore.setFileOpen}
-                        isFileOpen={whiteboardStore.isFileOpen}
-                        room={room}
-                    /> */}
                 </div>
+                <div ref={bindCollector} className="collector-container" />
                 <div ref={bindWhiteboard} className="whiteboard-box" />
             </div>
         )
