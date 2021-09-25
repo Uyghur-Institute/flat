@@ -34,13 +34,14 @@
   "dependencies": {
     "@ant-design/icons": "^4.6.2",
     "@loadable/component": "^5.15.0",
+    "@netless/app-monaco": "^0.1.7",
     "@netless/combine-player": "^1.1.6",
     "@netless/cursor-tool": "^0.1.0",
     "@netless/player-controller": "^0.0.9",
     "@netless/redo-undo": "^0.0.5",
     "@netless/tool-box": "^0.1.5",
     "@netless/video-js-plugin": "^0.3.6",
-    "@netless/window-manager": "^0.1.63-canary.1",
+    "@netless/window-manager": "^0.1.64-canary.3",
     "@videojs/vhs-utils": "^2.3.0",
     "@zip.js/zip.js": "^2.3.7",
     "agora-rtc-sdk-ng": "^4.5.0",
@@ -71,7 +72,7 @@
     "react-virtualized": "^9.22.2",
     "uuid": "^8.3.2",
     "video.js": "7.10.2",
-    "white-web-sdk": "2.13.19"
+    "white-web-sdk": "2.14.2"
   },
   "scripts": {
     "postinstall": "esbuild-dev ./scripts/post-install.ts",
