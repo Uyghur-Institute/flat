@@ -1,4 +1,4 @@
-/* eslint-disable react/display-name */
+/* eslint react/display-name: off */
 import { Meta, Story } from "@storybook/react";
 import React, { PropsWithChildren } from "react";
 import { MainPageLayoutHorizontal, MainPageLayoutHorizontalProps } from ".";
@@ -19,6 +19,10 @@ const storyMeta: Meta = {
 export default storyMeta;
 
 const sideMenuStyles: React.CSSProperties = { fontSize: 25 };
+
+/**
+ * TODO: we forget set i18n in current file!!!
+ */
 
 export const Overview: Story<PropsWithChildren<MainPageLayoutHorizontalProps>> = args => (
     <div className="vh-75 mw8-ns">

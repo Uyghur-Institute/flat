@@ -10,8 +10,12 @@ import { PageStoreContext, RoomStoreContext } from "../../components/StoreProvid
 import { errorTips } from "../../components/Tips/ErrorTips";
 import { globalStore } from "../../stores/GlobalStore";
 import { RouteNameType, RouteParams, usePushHistory } from "../../utils/routes";
-import { cancelPeriodicRoom, cancelPeriodicSubRoom } from "../../apiMiddleware/flatServer";
-import { INVITE_BASEURL } from "../../constants/Process";
+import { cancelPeriodicRoom, cancelPeriodicSubRoom } from "../../api-middleware/flatServer";
+import { FLAT_WEB_BASE_URL } from "../../constants/process";
+
+/**
+ * TODO: we forget set i18n in current file!!!
+ */
 
 export const PeriodicRoomDetailPage = observer<{}>(function PeriodicRoomDetailPage() {
     const params = useParams<RouteParams<RouteNameType.PeriodicRoomDetailPage>>();
@@ -134,7 +138,7 @@ export const PeriodicRoomDetailPage = observer<{}>(function PeriodicRoomDetailPa
         <div className="periodic-room-detail-page-container">
             <div className="periodic-room-detail-page-panel-container">
                 <PeriodicRoomPanel
-                    inviteBaseUrl={INVITE_BASEURL}
+                    inviteBaseUrl={FLAT_WEB_BASE_URL}
                     rooms={rooms}
                     userName={ownerUserName}
                     isCreator={isCreator}

@@ -12,9 +12,9 @@ import {
 import { useSafePromise } from "../../utils/hooks/lifecycle";
 import EditRoomPage from "../../components/EditRoomPage";
 import { RouteNameType, RouteParams, usePushHistory } from "../../utils/routes";
-import { periodicRoomInfo, updatePeriodicRoom } from "../../apiMiddleware/flatServer";
+import { periodicRoomInfo, updatePeriodicRoom } from "../../api-middleware/flatServer";
 import { errorTips } from "../../components/Tips/ErrorTips";
-import { useWindowSize } from "../../utils/hooks/useWindowSize";
+import { useWindowSize } from "../../utils/hooks/use-window-size";
 
 type ModifyPeriodicRoomPageProps = {
     periodicUUID: string;
@@ -99,7 +99,6 @@ export const ModifyPeriodicRoomPage = observer<ModifyPeriodicRoomPageProps>(
                         endTime: values.endTime.valueOf(),
                         title: values.title,
                         type: values.type,
-                        docs: [],
                         periodic:
                             values.periodic.endType === "rate"
                                 ? {
@@ -112,6 +111,7 @@ export const ModifyPeriodicRoomPage = observer<ModifyPeriodicRoomPageProps>(
                                   },
                     }),
                 );
+                // TODO: chinese??? i18n!
                 void message.success("修改成功");
                 pushHistory(RouteNameType.HomePage);
             } catch (e) {

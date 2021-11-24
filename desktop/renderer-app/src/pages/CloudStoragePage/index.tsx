@@ -5,16 +5,18 @@ import { v4 as v4uuid } from "uuid";
 import { CloudStorageContainer } from "flat-components";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
-import { WhiteboardStore } from "../../stores/WhiteboardStore";
+import { WhiteboardStore } from "../../stores/whiteboard-store";
 import { CloudStorageStore, CloudStorageFile } from "./store";
-import { queryConvertingTaskStatus } from "../../apiMiddleware/courseware-converting";
-import { convertFinish } from "../../apiMiddleware/flatServer/storage";
+import { queryConvertingTaskStatus } from "../../api-middleware/courseware-converting";
+import { convertFinish } from "../../api-middleware/flatServer/storage";
 import { useIsomorphicLayoutEffect } from "react-use";
 import { MainPageLayoutContainer } from "../../components/MainPageLayoutContainer";
 import { SceneDefinition } from "white-web-sdk";
 import { useTranslation } from "react-i18next";
-import { RequestErrorCode } from "../../constants/ErrorCode";
-import { ServerRequestError } from "../../utils/error/ServerRequestError";
+import { RequestErrorCode } from "../../constants/error-code";
+import { ServerRequestError } from "../../utils/error/server-request-error";
+import { getFileExt, isPPTX } from "../../utils/file";
+import { CLOUD_STORAGE_DOMAIN } from "../../constants/process";
 
 export interface CloudStoragePageProps {
     compact?: boolean;
@@ -54,26 +56,35 @@ export const CloudStoragePage = observer<CloudStoragePageProps>(function CloudSt
 
         void message.info(t("Inserting-courseware-tips"));
 
-        const ext = (/\.[^.]+$/.exec(file.fileName) || [""])[0].toLowerCase();
+        const ext = getFileExt(file.fileName);
+
         switch (ext) {
-            case ".jpg":
-            case ".jpeg":
-            case ".png":
-            case ".webp": {
+            case "jpg":
+            case "jpeg":
+            case "png":
+            case "webp": {
                 await insertImage(file);
                 break;
             }
-            case ".mp3":
-            case ".mp4": {
+            case "mp3":
+            case "mp4": {
                 insertMediaFile(file);
                 break;
             }
-            case ".doc":
-            case ".docx":
-            case ".ppt":
-            case ".pptx":
-            case ".pdf": {
-                await insertDocs(file, ext);
+            case "doc":
+            case "docx":
+            case "ppt":
+            case "pptx":
+            case "pdf": {
+                await insertDocs(file);
+                break;
+            }
+            case "ice": {
+                await insertIce(file);
+                break;
+            }
+            case "vf": {
+                await insertVf(file);
                 break;
             }
             default: {
@@ -135,18 +146,17 @@ export const CloudStoragePage = observer<CloudStoragePageProps>(function CloudSt
         whiteboard?.openMediaFileInWindowManager(file.fileURL, file.fileName);
     }
 
-    async function insertDocs(file: CloudStorageFile, ext: string): Promise<void> {
+    async function insertDocs(file: CloudStorageFile): Promise<void> {
         const room = whiteboard?.room;
         if (!room) {
             return;
         }
 
         const { taskUUID, taskToken, region } = file;
-        const dynamic = ext === ".pptx";
         const convertingStatus = await queryConvertingTaskStatus({
             taskUUID,
             taskToken,
-            dynamic,
+            dynamic: isPPTX(file.fileName),
             region,
         });
 
@@ -178,8 +188,8 @@ export const CloudStoragePage = observer<CloudStoragePageProps>(function CloudSt
             }
         } else if (convertingStatus.status === "Finished" && convertingStatus.progress) {
             const scenes: SceneDefinition[] = convertingStatus.progress.convertedFileList.map(
-                f => ({
-                    name: v4uuid(),
+                (f, i) => ({
+                    name: `${i + 1}`,
                     ppt: {
                         src: f.conversionFileUrl,
                         width: f.width,
@@ -192,6 +202,53 @@ export const CloudStoragePage = observer<CloudStoragePageProps>(function CloudSt
             const scenesPath = `/${taskUUID}/${uuid}`;
             whiteboard?.openDocsFileInWindowManager(scenesPath, file.fileName, scenes);
         } else {
+            void message.error(t("unable-to-insert-courseware"));
+        }
+    }
+
+    async function insertIce(file: CloudStorageFile): Promise<void> {
+        try {
+            const src =
+                CLOUD_STORAGE_DOMAIN.replace("[region]", file.region) +
+                new URL(file.fileURL).pathname.replace(/[^/]+$/, "") +
+                "resource/index.html";
+
+            if (src && whiteboard?.windowManager) {
+                await whiteboard.windowManager.addApp({
+                    kind: "IframeBridge",
+                    options: {
+                        title: file.fileName,
+                    },
+                    attributes: {
+                        src,
+                    },
+                });
+            } else {
+                void message.error(t("unable-to-insert-courseware"));
+            }
+        } catch (e) {
+            console.error(e);
+            void message.error(t("unable-to-insert-courseware"));
+        }
+    }
+
+    async function insertVf(file: CloudStorageFile): Promise<void> {
+        try {
+            if (whiteboard?.windowManager) {
+                await whiteboard.windowManager.addApp({
+                    kind: "IframeBridge",
+                    options: {
+                        title: file.fileName,
+                    },
+                    attributes: {
+                        src: file.fileURL,
+                    },
+                });
+            } else {
+                void message.error(t("unable-to-insert-courseware"));
+            }
+        } catch (e) {
+            console.error(e);
             void message.error(t("unable-to-insert-courseware"));
         }
     }

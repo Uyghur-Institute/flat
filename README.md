@@ -1,5 +1,5 @@
 <div align="center">
-    <img width="200" height="200" style="display: block;" src="./assets/flat-logo.png">
+    <img width="200" height="200" style="display: block;" src="./assets/flat-logo.svg">
 </div>
 
 <div align="center">
@@ -21,7 +21,7 @@
 <div align="center">
     <h1>Agora Flat</h1>
     <p>Project flat is the Web, Windows and macOS client of <a href="https://flat.whiteboard.agora.io/en/">Agora Flat</a> open source classroom.</p>
-    <p><a href="./README-zh.md">中文</a></p>
+    <p><a href="./docs/readme/README-zh.md">中文</a></p>
     <img src="./assets/flat-showcase-en.png">
 </div>
 
@@ -41,10 +41,10 @@
 
 - Real-time interaction
     - Multifunctional interactive whiteboard
-    - Real-time video/audio chat(RTC)
-    - Real-time messaging(RTM)
+    - Real-time video/audio chat (RTC)
+    - Real-time messaging (RTM)
 - Login via
-    - Wechat
+    - WeChat
     - GitHub
 - Classroom management
     - Join, create and schedule classrooms
@@ -68,11 +68,21 @@ yarn run bootstrap
 
 ### Development Mode
 
+#### web
+
+```shell
+yarn workspace flat-web start
+# or
+cd ./web/flat-web/ && yarn run start
+```
+
+#### electron
+
 ```shell
 yarn run start
 ```
 
-### Package Executable
+##### Package Executable
 
 - Run `yarn ship` at project root to package base on current system type.
 - Or run `yarn ship:mac` or `yarn ship:win` at project root to package for the specified system.
@@ -88,6 +98,16 @@ Many Flat components UI can be quickly viewed and developed via Storybook ([Onli
 - [Release Version Description](docs/releases)
 - [Environment Variables Reference](docs/env/README.md)
 - [Debugging Flat](docs/debugging/README.md)
+
+## Contributing
+
+Writing code is great, but there are many other ways to make meaningful contributions to the project:
+
+* [Improve documentation](CONTRIBUTING.md#improve-documentation)
+* [Improve issues](CONTRIBUTING.md#improve-issues)
+* [Give feedback on issues](CONTRIBUTING.md#give-feedback-on-issues)
+
+For more info about how to contribute, see [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Code Contributors
 

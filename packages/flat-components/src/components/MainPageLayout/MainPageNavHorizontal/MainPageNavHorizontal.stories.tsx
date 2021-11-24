@@ -1,4 +1,4 @@
-/* eslint-disable react/display-name */
+/* eslint react/display-name: off */
 import { Meta, Story } from "@storybook/react";
 import React, { PropsWithChildren } from "react";
 import { MainPageNavHorizontal, MainPageNavHorizontalProps } from ".";
@@ -20,6 +20,10 @@ const storyMeta: Meta = {
 };
 
 export default storyMeta;
+
+/**
+ * TODO: we forget set i18n in current file!!!
+ */
 
 const rightMenuStyles: React.CSSProperties = { fontSize: 22 };
 const sideMenuStyles: React.CSSProperties = { fontSize: 25 };

@@ -9,6 +9,10 @@ import CloudStorageUploadItem from "../CloudStorageUploadItem";
 
 const chance = new Chance();
 
+/**
+ * TODO: we forget set i18n in current file!!!
+ */
+
 const storyMeta: Meta = {
     title: "CloudStorage/CloudStorageUploadPanel",
     component: CloudStorageUploadPanel,
@@ -102,7 +106,7 @@ function getUploadTasks(count: number): CloudStorageUploadTask[] {
     return Array(count)
         .fill(0)
         .map(() => ({
-            uploadID: faker.random.uuid(),
+            uploadID: faker.datatype.uuid(),
             fileName: faker.random.word() + "." + faker.system.commonFileExt(),
             status: "uploading",
             percent: chance.integer({ min: 0, max: 100 }),

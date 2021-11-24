@@ -1,6 +1,6 @@
 {
   "name": "flat",
-  "version": "1.1.0-beta.1",
+  "version": "1.2.0",
   "private": true,
   "description": "",
   "homepage": "https://github.com/netless-io/flat",
@@ -42,10 +42,10 @@
     "dotenv-flow-webpack": "^1.1.0",
     "electron": "11.3.0",
     "electron-builder": "^22.10.5",
-    "electron-devtools-installer": "^3.2.0",
     "electron-notarize": "^1.0.0",
     "eslint": "^7.26.0",
     "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-eslint-comments": "^3.2.0",
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-webpack-plugin": "^3.0.1",
     "file-loader": "^6.2.0",
@@ -64,7 +64,7 @@
     "webpack-node-externals": "^3.0.0"
   },
   "dependencies": {
-    "agora-electron-sdk": "^3.4.7-rc.1-build.817",
+    "agora-electron-sdk": "3.5.0-rc.4-build.1105",
     "electron-updater": "^4.3.8",
     "fs-extra": "^9.0.1",
     "jquery": "^3.5.1",

@@ -5,10 +5,10 @@ import { observer } from "mobx-react-lite";
 import { message } from "antd";
 import { InviteModal as InviteModalImpl } from "flat-components";
 import { useTranslation } from "react-i18next";
-import { RoomItem } from "../../stores/RoomStore";
+import { RoomItem } from "../../stores/room-store";
 import { GlobalStoreContext, RoomStoreContext } from "../StoreProvider";
 import { errorTips } from "../Tips/ErrorTips";
-import { INVITE_BASEURL } from "../../constants/Process";
+import { FLAT_WEB_BASE_URL } from "../../constants/process";
 
 export interface InviteModalProps {
     visible: boolean;
@@ -48,7 +48,7 @@ export const InviteModal = observer<InviteModalProps>(function InviteModal({
 
     return (
         <InviteModalImpl
-            baseUrl={INVITE_BASEURL}
+            baseUrl={FLAT_WEB_BASE_URL}
             visible={visible}
             room={room}
             userName={globalStore.userName ?? ""}

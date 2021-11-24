@@ -42,6 +42,7 @@ module.exports = {
         "Quan",
         "tabpane",
         "anticon",
+        "nums",
 
         // whiteboard
         "unban",
@@ -88,9 +89,11 @@ module.exports = {
         "telebox", // @netless/widnow-manager
         "Buildin", // @netless/widnow-manager
         "zindex", // antd
+        "geogebra", // @netless/app-geogebra
 
         // misc
         "npmrc",
+        "yarnrc",
         "scpt",
         "osascript",
         "blockmap",
@@ -105,6 +108,7 @@ module.exports = {
         "browserslist",
         "estree",
         "webstorm",
+        "Frameless",
 
         // CNCF
         "nindent",
@@ -139,5 +143,6 @@ module.exports = {
         "cspell.config.js",
         "yarn.lock",
         "CHANGELOG.md",
+        "third_party/**"
     ],
 };

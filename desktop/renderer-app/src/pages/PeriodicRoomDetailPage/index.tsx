@@ -10,11 +10,15 @@ import { LoadingPage, MainPageHeader, PeriodicRoomPanel } from "flat-components"
 import { MainPageLayoutContainer } from "../../components/MainPageLayoutContainer";
 import { RoomStoreContext } from "../../components/StoreProvider";
 import { errorTips } from "../../components/Tips/ErrorTips";
-import { globalStore } from "../../stores/GlobalStore";
-import { useWindowSize } from "../../utils/hooks/useWindowSize";
+import { globalStore } from "../../stores/global-store";
+import { useWindowSize } from "../../utils/hooks/use-window-size";
 import { RouteNameType, RouteParams, usePushHistory } from "../../utils/routes";
-import { cancelPeriodicRoom, cancelPeriodicSubRoom } from "../../apiMiddleware/flatServer";
-import { INVITE_BASEURL } from "../../constants/Process";
+import { cancelPeriodicRoom, cancelPeriodicSubRoom } from "../../api-middleware/flatServer";
+import { FLAT_WEB_BASE_URL } from "../../constants/process";
+
+/**
+ * TODO: we forget set i18n in current file!!!
+ */
 
 export const PeriodicRoomDetailPage = observer<{}>(function PeriodicRoomDetailPage() {
     useWindowSize("Main");
@@ -139,7 +143,7 @@ export const PeriodicRoomDetailPage = observer<{}>(function PeriodicRoomDetailPa
                 </div>
                 <div className="periodic-room-detail-page-panel-container fancy-scrollbar">
                     <PeriodicRoomPanel
-                        inviteBaseUrl={INVITE_BASEURL}
+                        inviteBaseUrl={FLAT_WEB_BASE_URL}
                         rooms={rooms}
                         userName={ownerUserName}
                         isCreator={isCreator}

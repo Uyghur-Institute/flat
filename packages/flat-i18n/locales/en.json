@@ -105,8 +105,8 @@
   "begin-time": "Start time",
   "join-and-book-by-room-uuid": "Can join and book by room ID",
   "copy": "Copy",
-  "login-github": "GitHub login",
-  "login-wechat": "WeChat login",
+  "login-github": "Sign In with GitHub",
+  "login-wechat": "Sign In with WeChat",
   "agree-terms": "Please agree to the terms of service first",
   "and": "and",
   "have-read-and-agree": "Have read and agree",
@@ -234,7 +234,6 @@
   "schedule-room-detail": "Ends at {{time}} with {{length}} rooms",
   "schedule-room-type": "Room type: {{type}}",
   "view-all-rooms-in-periodic-rooms": "View all {{count}} rooms",
-  "Stop-following-your-perspective-tips": "Other users will stop following your perspective",
   "ending": "Ending...",
   "follow-your-perspective-tips": "Other users will follow your perspective",
   "interactive-mode": "Currently in interactive mode",
@@ -335,7 +334,10 @@
   "download-desktop-application": "Download Flat app",
   "download-desktop-application-tips": "Get the best experience",
   "login": "Login",
+  "open": "Open",
   "open-now": "Open now",
+  "not-installed-flat-tips": "Not installed Flat?",
+  "download-now": "Download it now",
   "or": "or",
   "select-the-way-to-join-room": "How do you want to join room?",
   "web-version-join-room": "Join on this browser",
@@ -355,6 +357,22 @@
   "share-screen": {
     "browser-not-permission": "Please grant your browser access to screen recording",
     "desktop-not-permission": "Please grant Flat access to screen recording",
-    "choose-share-content": "Choose what to share"
+    "choose-share-content": "Choose what to share",
+    "tip-window-title": "Ending screen sharing",
+    "tip-window-body": "You are sharing the current screen",
+    "tip-window-button": "End Sharing"
+  },
+  "app-store": "AppStore(Beta)",
+  "recently-used": "Recently Used",
+  "online-h5": {
+    "add": "Online HTML5 Courseware",
+    "name": "Name",
+    "url": "Online Address"
+  },
+  "error-tips": {
+    "file-check-failed": "File is corrupted",
+    "file-download-failed": "Cannot retrieve file for processing",
+    "file-unzip-failed": "File processing failed",
+    "file-upload-failed": "File upload failed"
   }
 }

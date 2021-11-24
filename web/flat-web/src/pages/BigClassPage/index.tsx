@@ -16,9 +16,9 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { RoomPhase } from "white-web-sdk";
 import { useTranslation } from "react-i18next";
-import { AgoraCloudRecordBackgroundConfigItem } from "../../apiMiddleware/flatServer/agora";
-import { RoomStatus, RoomType } from "../../apiMiddleware/flatServer/constants";
-import { RtcChannelType } from "../../apiMiddleware/rtc/room";
+import { AgoraCloudRecordBackgroundConfigItem } from "../../api-middleware/flatServer/agora";
+import { RoomStatus, RoomType } from "../../api-middleware/flatServer/constants";
+import { RtcChannelType } from "../../api-middleware/rtc/room";
 import { ChatPanel } from "../../components/ChatPanel";
 import { RoomStatusStoppedModal } from "../../components/ClassRoom/RoomStatusStoppedModal";
 import { CloudStorageButton } from "../../components/CloudStorageButton";
@@ -38,13 +38,14 @@ import {
     RoomStatusLoadingType,
     useClassRoomStore,
     User,
-} from "../../stores/ClassRoomStore";
+} from "../../stores/class-room-store";
 import { useAutoRun, useReaction } from "../../utils/mobx";
 import { RouteNameType, RouteParams } from "../../utils/routes";
 import { runtime } from "../../utils/runtime";
 import { BigClassAvatar } from "./BigClassAvatar";
 import { ShareScreen } from "../../components/ShareScreen";
-import { generateAvatar } from "../../utils/generateAvatar";
+import { generateAvatar } from "../../utils/generate-avatar";
+import { AppStoreButton } from "../../components/AppStoreButton";
 
 const recordingConfig: RecordingConfig = Object.freeze({
     channelType: RtcChannelType.Broadcast,
@@ -103,6 +104,7 @@ export const BigClassPage = observer<BigClassPageProps>(function BigClassPage() 
     const [isRealtimeSideOpen, openRealtimeSide] = useState(true);
 
     const updateLayoutTimeoutRef = useRef(NaN);
+    const loadingPageRef = useRef(false);
 
     // control whiteboard writable
     useEffect(() => {
@@ -168,11 +170,14 @@ export const BigClassPage = observer<BigClassPageProps>(function BigClassPage() 
         whiteboardStore.phase === RoomPhase.Disconnecting ||
         whiteboardStore.phase === RoomPhase.Reconnecting
     ) {
-        return <LoadingPage />;
+        loadingPageRef.current = true;
+    } else {
+        loadingPageRef.current = false;
     }
 
     return (
         <div className="realtime-container">
+            {loadingPageRef.current && <LoadingPage />}
             <div className="realtime-box">
                 <TopBar
                     isMac={runtime.isMac}
@@ -249,7 +254,7 @@ export const BigClassPage = observer<BigClassPageProps>(function BigClassPage() 
             default: {
                 return (
                     <RecordHintTips
-                        visible={globalStore.isShowRecordHintTips}
+                        visible={Boolean(whiteboardStore.room) && globalStore.isShowRecordHintTips}
                         onClose={globalStore.hideRecordHintTips}
                     >
                         <TopBarRoundBtn iconName="class-begin" onClick={classRoomStore.startClass}>
@@ -282,6 +287,8 @@ export const BigClassPage = observer<BigClassPageProps>(function BigClassPage() 
                         />
                     )}
 
+                {whiteboardStore.isWritable && <AppStoreButton addApp={whiteboardStore.addApp} />}
+
                 {whiteboardStore.isWritable && !shareScreenStore.existOtherUserStream && (
                     <TopBarRightBtn
                         title="Share Screen"
@@ -293,21 +300,6 @@ export const BigClassPage = observer<BigClassPageProps>(function BigClassPage() 
                         onClick={handleShareScreen}
                     />
                 )}
-
-                {/*
-                 * TODO: After the whiteboard supports multi-window, the vision control function is disabled, so hide the function for the time being.
-                 */}
-                {/* {whiteboardStore.isWritable && (
-                    <TopBarRightBtn
-                        title="Vision control"
-                        icon={
-                            whiteboardStore.viewMode === ViewMode.Broadcaster
-                                ? "follow-active"
-                                : "follow"
-                        }
-                        onClick={handleRoomController}
-                    />
-                )} */}
 
                 {/* <TopBarRightBtn
                     title="Docs center"
@@ -326,8 +318,8 @@ export const BigClassPage = observer<BigClassPageProps>(function BigClassPage() 
                 />
                 <TopBarDivider />
                 <TopBarRightBtn
-                    title="Open side panel"
-                    icon={isRealtimeSideOpen ? "hide-side-active" : "hide-side"}
+                    title={isRealtimeSideOpen ? "hide side panel" : "show side panel"}
+                    icon={isRealtimeSideOpen ? "hide-side" : "hide-side-active"}
                     onClick={handleSideOpenerSwitch}
                 />
             </>
@@ -394,20 +386,6 @@ export const BigClassPage = observer<BigClassPageProps>(function BigClassPage() 
             />
         );
     }
-
-    // function handleRoomController(): void {
-    //     const { room } = whiteboardStore;
-    //     if (!room) {
-    //         return;
-    //     }
-    //     if (room.state.broadcastState.mode !== ViewMode.Broadcaster) {
-    //         room.setViewMode(ViewMode.Broadcaster);
-    //         void message.success(t("follow-your-perspective-tips"));
-    //     } else {
-    //         room.setViewMode(ViewMode.Freedom);
-    //         void message.success(t("Stop-following-your-perspective-tips"));
-    //     }
-    // }
 
     function handleShareScreen(): void {
         void shareScreenStore.toggle();

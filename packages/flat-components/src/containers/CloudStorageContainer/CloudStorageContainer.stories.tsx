@@ -9,6 +9,10 @@ import { CloudStorageUploadTask } from "../../components/CloudStorage/types";
 
 const chance = new Chance();
 
+/**
+ * TODO: we forget set i18n in current file!!!
+ */
+
 const storyMeta: Meta = {
     title: "CloudStorage/CloudStorageContainer",
     component: CloudStorageContainer,
@@ -28,6 +32,7 @@ const fakeStoreImplProps = [
     "onItemMenuClick",
     "onItemTitleClick",
     "onNewFileName",
+    "addExternalFile",
 ] as const;
 
 type FakeStoreImplProps = typeof fakeStoreImplProps[number];
@@ -43,6 +48,7 @@ class FakeStore extends CloudStorageStore {
     public onItemMenuClick: FakeStoreConfig["onItemMenuClick"];
     public onItemTitleClick;
     public onNewFileName: FakeStoreConfig["onNewFileName"];
+    public addExternalFile;
 
     public pendingUploadTasks: CloudStorageStore["pendingUploadTasks"] = [];
     public uploadingUploadTasks: CloudStorageStore["uploadingUploadTasks"] = [];
@@ -56,7 +62,7 @@ class FakeStore extends CloudStorageStore {
         this.files = Array(25)
             .fill(0)
             .map(() => ({
-                fileUUID: faker.random.uuid(),
+                fileUUID: faker.datatype.uuid(),
                 fileName: faker.random.words() + "." + faker.system.commonFileExt(),
                 fileSize: chance.integer({ min: 0, max: 1000 * 1000 * 100 }),
                 convert: chance.pickone(["idle", "error", "success", "converting"]),
@@ -66,7 +72,7 @@ class FakeStore extends CloudStorageStore {
         this.totalUsage = this.files.reduce((sum, file) => sum + file.fileSize, 0);
 
         for (let i = chance.integer({ min: 0, max: 200 }); i >= 0; i--) {
-            const fileUUID = faker.random.uuid();
+            const fileUUID = faker.datatype.uuid();
 
             const task: CloudStorageUploadTask = {
                 uploadID: fileUUID,
@@ -102,6 +108,7 @@ class FakeStore extends CloudStorageStore {
         this.onUploadCancel = config.onUploadCancel;
         this.onUploadPanelClose = config.onUploadPanelClose;
         this.onUploadRetry = config.onUploadRetry;
+        this.addExternalFile = config.addExternalFile;
         this.onItemMenuClick = (fileUUID, menuKey) => {
             switch (menuKey) {
                 case "download": {
@@ -153,7 +160,7 @@ class FakeStore extends CloudStorageStore {
 
 function fakeStoreArgTypes(): ArgTypes {
     return fakeStoreImplProps.reduce((o, k) => {
-        o[k] = { table: { disable: true } };
+        o[k] = { table: { disable: true }, action: k };
         return o;
     }, {} as ArgTypes);
 }

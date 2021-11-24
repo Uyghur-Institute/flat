@@ -21,10 +21,10 @@ export const Overview: Story<ChatMessageListProps> = args => (
     </div>
 );
 const makeUser = (): User => ({
-    userUUID: faker.random.uuid(),
+    userUUID: faker.datatype.uuid(),
     name: faker.name.lastName(),
-    isSpeak: faker.random.boolean(),
-    isRaiseHand: faker.random.boolean(),
+    isSpeak: faker.datatype.boolean(),
+    isRaiseHand: faker.datatype.boolean(),
     avatar: "http://placekitten.com/64/64",
 });
 const currentUser = makeUser();
@@ -42,8 +42,8 @@ Overview.args = {
             timestamp: +faker.date.past(),
             type: ChatMsgType.ChannelMessage,
             userUUID: chance.pickone(users).userUUID,
-            uuid: faker.random.uuid(),
-            value: chance.sentence({ words: faker.random.number(20) }),
+            uuid: faker.datatype.uuid(),
+            value: chance.sentence({ words: faker.datatype.number(20) }),
         })),
     getUserByUUID: uuid => users.find(e => e.userUUID === uuid) || makeUser(),
 };

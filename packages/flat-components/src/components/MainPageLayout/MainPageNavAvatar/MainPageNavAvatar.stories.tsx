@@ -1,4 +1,4 @@
-/* eslint-disable react/display-name */
+/* eslint react/display-name: off */
 import { Meta, Story } from "@storybook/react";
 import React, { PropsWithChildren } from "react";
 import { MainPageNavAvatar, MainPageNavAvatarProps } from ".";
@@ -13,6 +13,10 @@ const storyMeta: Meta = {
 };
 
 export default storyMeta;
+
+/**
+ * TODO: we forget set i18n in current file!!!
+ */
 
 export const Overview: Story<PropsWithChildren<MainPageNavAvatarProps>> = args => (
     <div className="vh-100 pa3">

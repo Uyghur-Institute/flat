@@ -8,6 +8,10 @@ import { CloudStorageFile } from "../types";
 
 const chance = new Chance();
 
+/**
+ * TODO: we forget set i18n in current file!!!
+ */
+
 const storyMeta: Meta = {
     title: "CloudStorage/CloudStorageFileList",
     component: CloudStorageFileList,
@@ -23,7 +27,7 @@ Overview.args = {
         .fill(0)
         .map(() => {
             return {
-                fileUUID: faker.random.uuid(),
+                fileUUID: faker.datatype.uuid(),
                 fileName: faker.random.word() + "." + faker.system.commonFileExt(),
                 fileSize: chance.integer({ min: 0, max: 1000 * 1000 * 100 }),
                 convert: chance.pickone(["idle", "error", "success", "converting"]),
@@ -47,7 +51,7 @@ export const LongFileName: Story<{ fileName: string } & CloudStorageFileListProp
     const files = useMemo<CloudStorageFile[]>(
         () => [
             {
-                fileUUID: faker.random.uuid(),
+                fileUUID: faker.datatype.uuid(),
                 fileName,
                 fileSize: chance.integer({ min: 0, max: 1000 * 1000 * 100 }),
                 convert: chance.pickone(["idle", "error", "success", "converting"]),
@@ -115,7 +119,7 @@ export const PlayableExample: Story<{ itemCount: number } & CloudStorageFileList
                 .fill(0)
                 .map(() => {
                     return {
-                        fileUUID: faker.random.uuid(),
+                        fileUUID: faker.datatype.uuid(),
                         fileName: faker.random.words() + "." + faker.system.commonFileExt(),
                         fileSize: chance.integer({ min: 0, max: 1000 * 1000 * 100 }),
                         convert: chance.pickone(["idle", "error", "success", "converting"]),

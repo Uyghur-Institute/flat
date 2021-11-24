@@ -1,4 +1,4 @@
-/* eslint-disable react/display-name */
+/* eslint react/display-name: off */
 // import deviceSVG from "./icons/device.svg";
 // import deviceActiveSVG from "./icons/device-active.svg";
 import downloadSVG from "./icons/download.svg";
@@ -13,7 +13,8 @@ import { MainPageLayoutHorizontal, MainPageLayoutItem, MainPageLayoutProps } fro
 import { useTranslation } from "react-i18next";
 import { routeConfig, RouteNameType } from "../../route-config";
 import { GlobalStoreContext } from "../StoreProvider";
-import { generateAvatar } from "../../utils/generateAvatar";
+import { generateAvatar } from "../../utils/generate-avatar";
+import { FLAT_DOWNLOAD_URL } from "../../constants/process";
 
 export interface MainPageLayoutHorizontalContainerProps {
     subMenu?: MainPageLayoutItem[];
@@ -46,7 +47,7 @@ export const MainPageLayoutHorizontalContainer: React.FC<MainPageLayoutHorizonta
                 key: "download",
                 icon: (): React.ReactNode => <img src={downloadSVG} />,
                 title: t("nav-download"),
-                route: "https://flat.whiteboard.agora.io/#download",
+                route: FLAT_DOWNLOAD_URL,
             },
             {
                 key: "getGitHubCode",

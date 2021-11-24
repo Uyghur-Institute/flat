@@ -26,28 +26,29 @@ import ExitRoomConfirm, {
 } from "../../components/ExitRoomConfirm";
 import { RoomStatusStoppedModal } from "../../components/ClassRoom/RoomStatusStoppedModal";
 
-import { ClassModeType } from "../../apiMiddleware/Rtm";
-import { RoomStatus } from "../../apiMiddleware/flatServer/constants";
+import { ClassModeType } from "../../api-middleware/Rtm";
+import { RoomStatus } from "../../api-middleware/flatServer/constants";
 import {
     AgoraCloudRecordBackgroundConfigItem,
     AgoraCloudRecordLayoutConfigItem,
-} from "../../apiMiddleware/flatServer/agora";
+} from "../../api-middleware/flatServer/agora";
 import {
     RecordingConfig,
     RoomStatusLoadingType,
     useClassRoomStore,
     User,
-} from "../../stores/ClassRoomStore";
+} from "../../stores/class-room-store";
 import { RouteNameType, RouteParams } from "../../utils/routes";
 
 import "./SmallClassPage.less";
 import { CloudStorageButton } from "../../components/CloudStorageButton";
 import { GlobalStoreContext } from "../../components/StoreProvider";
 import { runtime } from "../../utils/runtime";
-import { RtcChannelType } from "../../apiMiddleware/rtc/room";
+import { RtcChannelType } from "../../api-middleware/rtc/room";
 import { useTranslation } from "react-i18next";
 import { ShareScreen } from "../../components/ShareScreen";
-import { generateAvatar } from "../../utils/generateAvatar";
+import { generateAvatar } from "../../utils/generate-avatar";
+import { AppStoreButton } from "../../components/AppStoreButton";
 
 const CLASSROOM_WIDTH = 1200;
 const AVATAR_AREA_WIDTH = CLASSROOM_WIDTH - 16 * 2;
@@ -104,6 +105,7 @@ export const SmallClassPage = observer<SmallClassPageProps>(function SmallClassP
     const [isRealtimeSideOpen, openRealtimeSide] = useState(true);
 
     const updateLayoutTimeoutRef = useRef(NaN);
+    const loadingPageRef = useRef(false);
 
     // control whiteboard writable
     useEffect(() => {
@@ -143,7 +145,9 @@ export const SmallClassPage = observer<SmallClassPageProps>(function SmallClassP
         phase === RoomPhase.Disconnecting ||
         phase === RoomPhase.Reconnecting
     ) {
-        return <LoadingPage />;
+        loadingPageRef.current = true;
+    } else {
+        loadingPageRef.current = false;
     }
 
     function handleShareScreen(): void {
@@ -152,6 +156,7 @@ export const SmallClassPage = observer<SmallClassPageProps>(function SmallClassP
 
     return (
         <div className="realtime-container">
+            {loadingPageRef.current && <LoadingPage />}
             <div className="realtime-box">
                 <TopBar
                     isMac={runtime.isMac}
@@ -179,7 +184,10 @@ export const SmallClassPage = observer<SmallClassPageProps>(function SmallClassP
 
     function renderAvatars(): React.ReactNode {
         return (
-            <div className="realtime-avatars-wrap">
+            <div
+                className="realtime-avatars-wrap"
+                style={{ maxWidth: `${whiteboardStore.smallClassAvatarWrapMaxWidth}px` }}
+            >
                 <div className="realtime-avatars">
                     <SmallClassAvatar
                         isCreator={true}
@@ -275,7 +283,7 @@ export const SmallClassPage = observer<SmallClassPageProps>(function SmallClassP
             default: {
                 return (
                     <RecordHintTips
-                        visible={globalStore.isShowRecordHintTips}
+                        visible={Boolean(whiteboardStore.room) && globalStore.isShowRecordHintTips}
                         onClose={globalStore.hideRecordHintTips}
                     >
                         <TopBarRoundBtn iconName="class-begin" onClick={classRoomStore.startClass}>
@@ -308,6 +316,8 @@ export const SmallClassPage = observer<SmallClassPageProps>(function SmallClassP
                         />
                     )}
 
+                {whiteboardStore.isWritable && <AppStoreButton addApp={whiteboardStore.addApp} />}
+
                 {whiteboardStore.isWritable && !shareScreenStore.existOtherUserStream && (
                     <TopBarRightBtn
                         title="Share Screen"
@@ -319,18 +329,6 @@ export const SmallClassPage = observer<SmallClassPageProps>(function SmallClassP
                         onClick={handleShareScreen}
                     />
                 )}
-
-                {/* {whiteboardStore.isWritable && (
-                    <TopBarRightBtn
-                        title="Vision control"
-                        icon={
-                            whiteboardStore.viewMode === ViewMode.Broadcaster
-                                ? "follow-active"
-                                : "follow"
-                        }
-                        onClick={handleRoomController}
-                    />
-                )} */}
 
                 {/* <TopBarRightBtn
                     title="Docs center"
@@ -349,8 +347,8 @@ export const SmallClassPage = observer<SmallClassPageProps>(function SmallClassP
                 />
                 <TopBarDivider />
                 <TopBarRightBtn
-                    title="Open side panel"
-                    icon={isRealtimeSideOpen ? "hide-side-active" : "hide-side"}
+                    title={isRealtimeSideOpen ? "hide side panel" : "show side panel"}
+                    icon={isRealtimeSideOpen ? "hide-side" : "hide-side-active"}
                     onClick={() => {
                         openRealtimeSide(isRealtimeSideOpen => !isRealtimeSideOpen);
                         whiteboardStore.setRightSideClose(isRealtimeSideOpen);
@@ -389,20 +387,6 @@ export const SmallClassPage = observer<SmallClassPageProps>(function SmallClassP
             />
         );
     }
-
-    // function handleRoomController(): void {
-    //     const { room } = whiteboardStore;
-    //     if (!room) {
-    //         return;
-    //     }
-    //     if (room.state.broadcastState.mode !== ViewMode.Broadcaster) {
-    //         room.setViewMode(ViewMode.Broadcaster);
-    //         void message.success(t("follow-your-perspective-tips"));
-    //     } else {
-    //         room.setViewMode(ViewMode.Freedom);
-    //         void message.success(t("Stop-following-your-perspective-tips"));
-    //     }
-    // }
 
     function stopClass(): void {
         confirm(ExitRoomConfirmType.StopClassButton);

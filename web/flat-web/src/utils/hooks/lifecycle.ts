@@ -1,5 +1,5 @@
 import { RefObject, useCallback, useEffect, useRef, useState } from "react";
-import { NODE_ENV } from "../../constants/Process";
+import { NODE_ENV } from "../../constants/process";
 
 export function useIsUnMounted(): RefObject<boolean> {
     const isUnMountRef = useRef(false);
@@ -52,7 +52,7 @@ export function useSafePromise(): <T, E = unknown>(
                 if (!isUnMountRef.current) {
                     reject(error);
                 } else if (onUnmountedError) {
-                    onUnmountedError(error);
+                    onUnmountedError(error as E);
                 } else {
                     if (NODE_ENV === "development") {
                         console.error(

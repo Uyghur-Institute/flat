@@ -12,8 +12,12 @@ import {
 import { useSafePromise } from "../../utils/hooks/lifecycle";
 import EditRoomPage from "../../components/EditRoomPage";
 import { RouteNameType, RouteParams, usePushHistory } from "../../utils/routes";
-import { periodicRoomInfo, updatePeriodicRoom } from "../../apiMiddleware/flatServer";
+import { periodicRoomInfo, updatePeriodicRoom } from "../../api-middleware/flatServer";
 import { errorTips } from "../../components/Tips/ErrorTips";
+
+/**
+ * TODO: we forget set i18n in current file!!!
+ */
 
 type ModifyPeriodicRoomPageProps = {
     periodicUUID: string;
@@ -96,7 +100,6 @@ export const ModifyPeriodicRoomPage = observer<ModifyPeriodicRoomPageProps>(
                         endTime: values.endTime.valueOf(),
                         title: values.title,
                         type: values.type,
-                        docs: [],
                         periodic:
                             values.periodic.endType === "rate"
                                 ? {

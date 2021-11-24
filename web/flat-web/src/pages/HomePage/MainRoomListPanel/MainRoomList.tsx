@@ -14,15 +14,15 @@ import {
     RoomListSkeletons,
     RoomStatusType,
 } from "flat-components";
-import { ListRoomsType } from "../../../apiMiddleware/flatServer";
-import { RoomStatus, RoomType } from "../../../apiMiddleware/flatServer/constants";
+import { ListRoomsType } from "../../../api-middleware/flatServer";
+import { RoomStatus, RoomType } from "../../../api-middleware/flatServer/constants";
 import { GlobalStoreContext, RoomStoreContext } from "../../../components/StoreProvider";
 import { errorTips } from "../../../components/Tips/ErrorTips";
-import { RoomItem } from "../../../stores/RoomStore";
+import { RoomItem } from "../../../stores/room-store";
 import { useSafePromise } from "../../../utils/hooks/lifecycle";
 import { RouteNameType, usePushHistory } from "../../../utils/routes";
-import { joinRoomHandler } from "../../utils/joinRoomHandler";
-import { INVITE_BASEURL } from "../../../constants/Process";
+import { joinRoomHandler } from "../../utils/join-room-handler";
+import { FLAT_WEB_BASE_URL } from "../../../constants/process";
 import { useTranslation } from "react-i18next";
 
 export interface MainRoomListProps {
@@ -193,7 +193,7 @@ export const MainRoomList = observer<MainRoomListProps>(function MainRoomList({
             )}
             {currentRoom && (
                 <InviteModal
-                    baseUrl={INVITE_BASEURL}
+                    baseUrl={FLAT_WEB_BASE_URL}
                     visible={inviteModalVisible}
                     room={currentRoom}
                     userName={globalStore.userName ?? ""}
@@ -216,7 +216,7 @@ export const MainRoomList = observer<MainRoomListProps>(function MainRoomList({
 
     function replayRoom(config: { roomUUID: string; ownerUUID: string; roomType: RoomType }): void {
         const { roomUUID, ownerUUID, roomType } = config;
-        window.open(`${INVITE_BASEURL}/replay/${roomType}/${roomUUID}/${ownerUUID}/`, "_blank");
+        window.open(`${FLAT_WEB_BASE_URL}/replay/${roomType}/${roomUUID}/${ownerUUID}/`, "_blank");
     }
 
     function hideCancelModal(): void {
