@@ -6,12 +6,15 @@ import type {
     ILocalVideoTrack,
     IMicrophoneAudioTrack,
 } from "agora-rtc-sdk-ng";
-import AgoraRTC from "agora-rtc-sdk-ng";
 import type { RtcAvatar } from "./avatar";
+import type { Disposer } from "./hot-plug";
+
+import AgoraRTC from "agora-rtc-sdk-ng";
 import { AGORA } from "../../constants/process";
 import { globalStore } from "../../stores/GlobalStore";
 import { generateRTCToken } from "../flatServer/agora";
-import { setCameraTrack, setMicrophoneTrack } from "./hot-plug";
+import { setCameraTrack, setMicrophoneTrack, hotPlug } from "./hot-plug";
+import { configStore } from "../../stores/config-store";
 
 AgoraRTC.enableLogUpload();
 
@@ -44,6 +47,7 @@ export class RtcRoom {
         this.resolveJoined = resolve;
     });
     private roomUUID?: string;
+    private hotPlugDisposer?: Disposer;
 
     public async join({
         roomUUID,
@@ -80,6 +84,7 @@ export class RtcRoom {
         this.resolveJoined();
 
         this.roomUUID = roomUUID;
+        this.hotPlugDisposer = hotPlug();
 
         return this.client;
     }
@@ -89,6 +94,10 @@ export class RtcRoom {
     }
 
     public async destroy(): Promise<void> {
+        if (this.hotPlugDisposer) {
+            this.hotPlugDisposer();
+            this.hotPlugDisposer = undefined;
+        }
         if (this.client) {
             await this.joined;
             setMicrophoneTrack();
@@ -124,7 +133,9 @@ export class RtcRoom {
     public async getLocalAudioTrack(): Promise<ILocalAudioTrack> {
         if (!this._localAudioTrack) {
             await this.joined;
-            this._localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+            this._localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack({
+                microphoneId: configStore.microphoneId,
+            });
             setMicrophoneTrack(this._localAudioTrack as IMicrophoneAudioTrack);
             this._localAudioTrack.once("track-ended", () => {
                 console.log("[rtc] track-ended local audio");
@@ -140,6 +151,7 @@ export class RtcRoom {
             await this.joined;
             this._localVideoTrack = await AgoraRTC.createCameraVideoTrack({
                 encoderConfig: { width: 288, height: 216 },
+                cameraId: configStore.cameraId,
             });
             setCameraTrack(this._localVideoTrack as ICameraVideoTrack);
             this._localVideoTrack.once("track-ended", () => {

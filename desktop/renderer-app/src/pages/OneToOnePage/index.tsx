@@ -72,7 +72,12 @@ export const OneToOnePage = observer<OneToOnePageProps>(function OneToOnePage() 
 
     const params = useParams<RouteParams<RouteNameType.OneToOnePage>>();
 
-    const classRoomStore = useClassRoomStore(params.roomUUID, params.ownerUUID, recordingConfig);
+    const { i18n, t } = useTranslation();
+    const classRoomStore = useClassRoomStore({
+        ...params,
+        recordingConfig,
+        i18n,
+    });
     const whiteboardStore = classRoomStore.whiteboardStore;
     const shareScreenStore = classRoomStore.shareScreenStore;
 
@@ -83,8 +88,6 @@ export const OneToOnePage = observer<OneToOnePageProps>(function OneToOnePage() 
 
     const updateLayoutTimeoutRef = useRef(NaN);
     const loadingPageRef = useRef(false);
-
-    const { t } = useTranslation();
 
     const joiner = useComputed(() => {
         if (classRoomStore.isCreator) {
@@ -162,7 +165,11 @@ export const OneToOnePage = observer<OneToOnePageProps>(function OneToOnePage() 
                                 shareScreenStore.enable();
                             }}
                         />
-                        <Whiteboard whiteboardStore={whiteboardStore} />
+                        <Whiteboard
+                            whiteboardStore={whiteboardStore}
+                            classRoomStore={classRoomStore}
+                            disableHandRaising={true}
+                        />
                     </div>
                     {renderRealtimePanel()}
                 </div>
@@ -275,16 +282,9 @@ export const OneToOnePage = observer<OneToOnePageProps>(function OneToOnePage() 
                     />
                 )}
 
-                {/* <TopBarRightBtn
-                    title="Docs center"
-                    icon="folder"
-                    onClick={whiteboardStore.toggleFileOpen}
-                /> */}
                 {/* TODO: open cloud-storage sub window */}
-                <CloudStorageButton whiteboard={whiteboardStore} />
+                <CloudStorageButton classroom={classRoomStore} />
                 <InviteButton roomInfo={classRoomStore.roomInfo} />
-                {/* @TODO implement Options menu */}
-                {/* <TopBarRightBtn title="Options" icon="options" onClick={() => {}} /> */}
                 <TopBarRightBtn
                     title="Exit"
                     icon="exit"
@@ -333,7 +333,6 @@ export const OneToOnePage = observer<OneToOnePageProps>(function OneToOnePage() 
                     <ChatPanel
                         classRoomStore={classRoomStore}
                         disableMultipleSpeakers={true}
-                        disableHandRaising={true}
                     ></ChatPanel>
                 }
             />

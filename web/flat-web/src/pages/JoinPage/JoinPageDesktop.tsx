@@ -3,7 +3,7 @@ import logoSVG from "./icons/logo.svg";
 import downloadSVG from "./icons/download.svg";
 import joinSVG from "./icons/join.svg";
 
-import React from "react";
+import React, { useMemo } from "react";
 import { Avatar, Button } from "antd";
 import { useTranslation } from "react-i18next";
 
@@ -30,8 +30,11 @@ export default function JoinPageDesktop({
     const { t } = useTranslation();
     const pushHistory = usePushHistory();
 
+    const url = useMemo(() => `x-agora-flat-client://joinRoom?roomUUID=${roomUUID}`, [roomUUID]);
+
     return (
         <div className="join-page-container">
+            <iframe width="0" height="0" style={{ display: "none" }} src={url} />
             <div className="join-page-header-container">
                 <img src={logoSVG} alt="flat-logo" />
                 {isLogin ? (
@@ -88,9 +91,7 @@ export default function JoinPageDesktop({
                 </div>
                 <div className="join-page-content-container-open-flat">
                     <span>{t("already-installed-flat-tips")}</span>
-                    <a href={`x-agora-flat-client://joinRoom?roomUUID=${roomUUID}`}>
-                        {t("open-now")}
-                    </a>
+                    <a href={url}>{t("open-now")}</a>
                 </div>
             </div>
             <div className="join-page-footer-container">

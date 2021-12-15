@@ -85,15 +85,15 @@ const recordingConfig: RecordingConfig = Object.freeze({
 export type SmallClassPageProps = {};
 
 export const SmallClassPage = observer<SmallClassPageProps>(function SmallClassPage() {
-    const { t } = useTranslation();
+    const { i18n, t } = useTranslation();
     const params = useParams<RouteParams<RouteNameType.SmallClassPage>>();
 
-    const classRoomStore = useClassRoomStore(
-        params.roomUUID,
-        params.ownerUUID,
+    const classRoomStore = useClassRoomStore({
+        ...params,
         recordingConfig,
-        ClassModeType.Interaction,
-    );
+        classMode: ClassModeType.Interaction,
+        i18n,
+    });
     const whiteboardStore = classRoomStore.whiteboardStore;
     const shareScreenStore = classRoomStore.shareScreenStore;
 
@@ -168,7 +168,13 @@ export const SmallClassPage = observer<SmallClassPageProps>(function SmallClassP
                 <div className="realtime-content">
                     <div className="container">
                         <ShareScreen shareScreenStore={shareScreenStore} />
-                        <Whiteboard whiteboardStore={whiteboardStore} />
+                        <Whiteboard
+                            whiteboardStore={whiteboardStore}
+                            classRoomStore={classRoomStore}
+                            disableHandRaising={
+                                classRoomStore.classMode === ClassModeType.Interaction
+                            }
+                        />
                     </div>
                     {renderRealtimePanel()}
                 </div>
@@ -330,16 +336,8 @@ export const SmallClassPage = observer<SmallClassPageProps>(function SmallClassP
                     />
                 )}
 
-                {/* <TopBarRightBtn
-                    title="Docs center"
-                    icon="folder"
-                    onClick={whiteboardStore.toggleFileOpen}
-                /> */}
-                {/* TODO: open cloud-storage sub window */}
-                <CloudStorageButton whiteboard={whiteboardStore} />
+                <CloudStorageButton classroom={classRoomStore} />
                 <InviteButton roomInfo={classRoomStore.roomInfo} />
-                {/* @TODO implement Options menu */}
-                {/* <TopBarRightBtn title="Options" icon="options" onClick={() => {}} /> */}
                 <TopBarRightBtn
                     title="Exit"
                     icon="exit"
@@ -364,12 +362,7 @@ export const SmallClassPage = observer<SmallClassPageProps>(function SmallClassP
                 isShow={isRealtimeSideOpen}
                 isVideoOn={false}
                 videoSlot={null}
-                chatSlot={
-                    <ChatPanel
-                        classRoomStore={classRoomStore}
-                        disableHandRaising={classRoomStore.classMode === ClassModeType.Interaction}
-                    ></ChatPanel>
-                }
+                chatSlot={<ChatPanel classRoomStore={classRoomStore}></ChatPanel>}
             />
         );
     }

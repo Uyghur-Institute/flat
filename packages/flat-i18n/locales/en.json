@@ -22,7 +22,7 @@
   "me": "(Me)",
   "messages": "Message list",
   "raise-your-hand": "Raise hand",
-  "raised-hand": "(Hands raised)",
+  "raised-hand": "(Hand raised)",
   "say-something": "Say something...",
   "send": "send",
   "teacher": "(Teacher)",
@@ -70,7 +70,7 @@
     "SmallClass": "Small Class"
   },
   "home-page-hero-button-type": {
-    "create": "Create",
+    "begin": "Begin",
     "join": "Join",
     "schedule": "Schedule"
   },
@@ -193,7 +193,8 @@
   "title-AboutPage": "About",
   "title-JoinPage": "Join room",
   "title-ResourcePreviewPage": "Resource Preview",
-  "Inserting-courseware-tips": "Inserting courseware...",
+  "title-DevicesTestPage": "Device Test",
+  "inserting-courseware-tips": "Inserting courseware...",
   "cancel-upload": "Cancel upload",
   "cancel-upload-tips": "The upload has not been completed. Are you sure to cancel all ongoing uploads?",
   "delete-courseware-tips": "Are you sure to delete this courseware? \nUnrecoverable after the courseware is deleted",
@@ -221,7 +222,7 @@
   "the-room-has-been-cancelled": "The room has been cancelled",
   "the-room-has-been-removed": "The room has been removed",
   "history": "History",
-  "create": "Create",
+  "create": "Begin",
   "join-options": "Join option",
   "create-room-default-title": "The room created by {{name}}",
   "turn-on-the-camera": "Camera",
@@ -374,5 +375,14 @@
     "file-download-failed": "Cannot retrieve file for processing",
     "file-unzip-failed": "File processing failed",
     "file-upload-failed": "File upload failed"
-  }
+  },
+  "no-device-permission": "No permission",
+  "speaker": "Speaker",
+  "enable-camera-permission-tip": "Missing permission for camera access",
+  "device-test": "Devices Test",
+  "close-tip": "Close tip",
+  "device-test-option": "Device test option",
+  "turn-on-device-test": "Turn on device test when join the room",
+  "user-guide-text": "Want to learn more about Flat? ",
+  "user-guide-button": "Check it out now"
 }

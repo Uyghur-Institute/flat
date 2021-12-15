@@ -17,6 +17,8 @@ export class GlobalStore {
      * Hide it permanently if user close the tooltip.
      */
     public isShowRecordHintTips = true;
+    public isShowGuide = false;
+    public isTurnOffDeviceTest = false;
     public userInfo: UserInfo | null = null;
     public whiteboardRoomUUID: string | null = null;
     public whiteboardRoomToken: string | null = null;
@@ -85,8 +87,16 @@ export class GlobalStore {
         this.isShowRecordHintTips = false;
     };
 
+    public toggleDeviceTest = (): void => {
+        this.isTurnOffDeviceTest = !this.isTurnOffDeviceTest;
+    };
+
     public isShareScreenUID = (uid: UID): boolean => {
         return this.rtcShareScreen?.uid === Number(uid);
+    };
+
+    public updateShowGuide = (showGuide: boolean): void => {
+        this.isShowGuide = showGuide;
     };
 }
 

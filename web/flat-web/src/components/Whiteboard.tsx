@@ -5,18 +5,26 @@ import RedoUndo from "@netless/redo-undo";
 import ToolBox from "@netless/tool-box";
 import { WindowManager } from "@netless/window-manager";
 import classNames from "classnames";
+import { RaiseHand, ScenesController } from "flat-components";
 import { observer } from "mobx-react-lite";
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { WhiteboardStore } from "../stores/whiteboard-store";
-import { isSupportedImageType, onDropImage } from "../utils/dnd/image";
-import { ScenesController } from "flat-components";
+import { isSupportedFileExt } from "../utils/drag-and-drop";
+import { isSupportedImageType, onDropImage } from "../utils/drag-and-drop/image";
+import { ClassRoomStore } from "../stores/class-room-store";
 
 export interface WhiteboardProps {
     whiteboardStore: WhiteboardStore;
+    classRoomStore: ClassRoomStore;
+    disableHandRaising?: boolean;
 }
 
-export const Whiteboard = observer<WhiteboardProps>(function Whiteboard({ whiteboardStore }) {
+export const Whiteboard = observer<WhiteboardProps>(function Whiteboard({
+    whiteboardStore,
+    classRoomStore,
+    disableHandRaising,
+}) {
     const { i18n } = useTranslation();
     const { room } = whiteboardStore;
 
@@ -36,8 +44,7 @@ export const Whiteboard = observer<WhiteboardProps>(function Whiteboard({ whiteb
                     containerSizeRatio: whiteboardStore.getWhiteboardRatio(),
                     collectorStyles: {
                         position: "absolute",
-                        right: "10px",
-                        bottom: "60px",
+                        bottom: "8px",
                     },
                     chessboard: false,
                 });
@@ -89,7 +96,7 @@ export const Whiteboard = observer<WhiteboardProps>(function Whiteboard({ whiteb
         (event: React.DragEvent<HTMLDivElement>) => {
             event.preventDefault();
             const file = event.dataTransfer.files[0];
-            if (room && file && isSupportedImageType(file)) {
+            if (room && file && isSupportedFileExt(file)) {
                 event.dataTransfer.dropEffect = "copy";
             }
         },
@@ -100,15 +107,19 @@ export const Whiteboard = observer<WhiteboardProps>(function Whiteboard({ whiteb
         async (event: React.DragEvent<HTMLDivElement>) => {
             event.preventDefault();
             const file = event.dataTransfer.files[0];
-            if (room && file && isSupportedImageType(file)) {
-                const rect = (event.target as HTMLDivElement).getBoundingClientRect();
-                const rx = event.clientX - rect.left;
-                const ry = event.clientY - rect.top;
-                const { x, y } = room.convertToPointInWorld({ x: rx, y: ry });
-                await onDropImage(file, x, y, room);
+            if (room && file) {
+                if (isSupportedImageType(file)) {
+                    const rect = (event.target as HTMLDivElement).getBoundingClientRect();
+                    const rx = event.clientX - rect.left;
+                    const ry = event.clientY - rect.top;
+                    const { x, y } = room.convertToPointInWorld({ x: rx, y: ry });
+                    await onDropImage(file, x, y, room);
+                } else if (isSupportedFileExt(file)) {
+                    whiteboardStore.onDrop(file);
+                }
             }
         },
-        [room],
+        [room, whiteboardStore],
     );
 
     const whiteboardOnResize = (): void => {
@@ -219,7 +230,22 @@ export const Whiteboard = observer<WhiteboardProps>(function Whiteboard({ whiteb
                         />
                     </div>
                 </div>
-                <div ref={bindCollector} className="collector-container" />
+                {!whiteboardStore.isCreator && !whiteboardStore.isWritable && (
+                    <div className="raise-hand-container">
+                        <RaiseHand
+                            isRaiseHand={classRoomStore.users.currentUser?.isRaiseHand}
+                            disableHandRaising={disableHandRaising}
+                            onRaiseHandChange={classRoomStore.onToggleHandRaising}
+                        />
+                    </div>
+                )}
+                <div
+                    ref={bindCollector}
+                    className={classNames("collector-container", {
+                        "collector-container-not-writable": !whiteboardStore.isWritable,
+                    })}
+                />
+
                 <div ref={bindWhiteboard} className="whiteboard-box" />
             </div>
         )

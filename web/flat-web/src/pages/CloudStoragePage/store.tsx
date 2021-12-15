@@ -40,7 +40,7 @@ import { ConvertStatusManager } from "./ConvertStatusManager";
 export type CloudStorageFile = CloudStorageFileUI &
     Pick<CloudFile, "fileURL" | "taskUUID" | "taskToken" | "region" | "external">;
 
-export type FileMenusKey = "download" | "rename" | "delete";
+export type FileMenusKey = "open" | "download" | "rename" | "delete";
 
 export class CloudStorageStore extends CloudStorageStoreBase {
     public uploadTaskManager = getUploadTaskManager();
@@ -49,6 +49,7 @@ export class CloudStorageStore extends CloudStorageStoreBase {
     public filesMap = observable.map<FileUUID, CloudStorageFile>();
 
     public insertCourseware: (file: CloudStorageFile) => void;
+    public onCoursewareInserted?: () => void;
 
     // a set of taskUUIDs representing querying tasks
     private convertStatusManager = new ConvertStatusManager();
@@ -116,8 +117,10 @@ export class CloudStorageStore extends CloudStorageStoreBase {
     public fileMenus = (
         file: CloudStorageFileUI,
     ): Array<{ key: React.Key; name: React.ReactNode }> => {
-        const menus: Array<{ key: FileMenusKey; name: ReactNode }> = [];
-        menus.push({ key: "download", name: this.i18n.t("download") });
+        const menus: Array<{ key: FileMenusKey; name: ReactNode }> = [
+            { key: "open", name: this.i18n.t("open") },
+            { key: "download", name: this.i18n.t("download") },
+        ];
         if (file.convert !== "error") {
             menus.push({ key: "rename", name: this.i18n.t("rename") });
         }
@@ -131,6 +134,10 @@ export class CloudStorageStore extends CloudStorageStoreBase {
     /** When a file menus item is clicked */
     public onItemMenuClick = (fileUUID: FileUUID, menuKey: React.Key): void => {
         switch (menuKey) {
+            case "open": {
+                this.onItemTitleClick(fileUUID);
+                break;
+            }
             case "download": {
                 this.downloadFile(fileUUID);
                 break;
@@ -266,7 +273,11 @@ export class CloudStorageStore extends CloudStorageStoreBase {
         return addExternalFile({ fileName, url: fileURL });
     };
 
-    public initialize(): () => void {
+    public initialize({
+        onCoursewareInserted,
+    }: { onCoursewareInserted?: () => void } = {}): () => void {
+        this.onCoursewareInserted = onCoursewareInserted;
+
         void this.refreshFiles();
 
         if (
@@ -290,6 +301,7 @@ export class CloudStorageStore extends CloudStorageStoreBase {
             window.clearTimeout(this._refreshFilesTimeout);
             this._refreshFilesTimeout = NaN;
             this.convertStatusManager.cancelAllTasks();
+            this.onCoursewareInserted = undefined;
         };
     }
 

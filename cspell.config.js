@@ -12,6 +12,7 @@ module.exports = {
         "bootup",
         "btns",
         "topbar",
+        "titlebar",
         "typebox",
         "downloaders",
 
@@ -90,6 +91,7 @@ module.exports = {
         "Buildin", // @netless/widnow-manager
         "zindex", // antd
         "geogebra", // @netless/app-geogebra
+        "commitlintrc", // @commitlint/cli
 
         // misc
         "npmrc",
@@ -118,6 +120,7 @@ module.exports = {
         "tolerations",
         "Kube",
         "agoraflat",
+        "applinks",
     ],
     flagWords: ["fuck", "bitch", "asshole", "bullshit", "crap", "suck", "wtf"],
     dictionaries: [
@@ -143,6 +146,5 @@ module.exports = {
         "cspell.config.js",
         "yarn.lock",
         "CHANGELOG.md",
-        "third_party/**"
     ],
 };

@@ -1895,10 +1895,10 @@
   resolved "https://registry.npmjs.org/@netless/app-monaco/-/app-monaco-0.1.11.tgz#f5fc1bc66dfb1ba0fa561483e7974d3771665138"
   integrity sha512-PwQDGHycri2gYCIF/SykokqjSyP/z8SShET2bmQd2UaVyMX11W2i5iAK4gntq22Cp5NW6JHawrTNbpfpoDMwMg==
 
-"@netless/app-slide@^0.0.26":
-  version "0.0.26"
-  resolved "https://registry.npmjs.org/@netless/app-slide/-/app-slide-0.0.26.tgz#7895b61fb44043b2e7dc731a38678bd9ba5115a0"
-  integrity sha512-FQDnqoRX6wK8pYMX8WkedykkwvHjajNgob4+40LUDyRTluWnohSz7ETVwPoFC/BCYKGpLVOOw8bqvoufgNDpBw==
+"@netless/app-slide@^0.0.44":
+  version "0.0.44"
+  resolved "https://registry.npmjs.org/@netless/app-slide/-/app-slide-0.0.44.tgz#a7dd10dadf3eabd7b2f8d9a15b7d3ce238f38043"
+  integrity sha512-xzWyifMIweUeu5tDALuRQGsMaGLQiggRiAqGjJH9sBdMzoScnnQMBHWfN566pR5YWnJ/iddc8cdb1eZ3L4aK+Q==
 
 "@netless/canvas-polyfill@^0.0.4":
   version "0.0.4"
@@ -1944,17 +1944,17 @@
   resolved "https://registry.yarnpkg.com/@netless/redo-undo/-/redo-undo-0.0.5.tgz#c5b00f5940ef33a0d6a810cd0935f4d9c172ea52"
   integrity sha512-P8ceK3hSY2eMfFIjBeSpRsqXpjjTea9bBWyRF8t8q0kLR4ICld2VMFMRbytqZ8sjCFy9CgbicuBOdMj7juABIQ==
 
-"@netless/telebox-insider@0.2.5":
-  version "0.2.5"
-  resolved "https://registry.npmjs.org/@netless/telebox-insider/-/telebox-insider-0.2.5.tgz#2331b0797fbf1daddb9b8fcb4f21f914e6566aff"
-  integrity sha512-nJCEGZDElZcXVIHnfWg8WGjNwVGdh9T2Z+fxYh62lOGHIVevN1K6gnnhlzRCjkboD+z0dxhjSTF2yrIivHu3jA==
+"@netless/telebox-insider@0.2.7":
+  version "0.2.7"
+  resolved "https://registry.npmjs.org/@netless/telebox-insider/-/telebox-insider-0.2.7.tgz#0525f8b72cb54e5d5f2f493d7b4b030e35e78163"
+  integrity sha512-DuvFuKM0h8RX1feSM/ZYNLNhlJw48yyQDbGcOvZW60Ncr+3t6BqN4z80gzvQLcNfpBD6yqYGWts2/k4fTLzlhQ==
   dependencies:
     "@types/shallowequal" "^1.1.1"
     eventemitter3 "^4.0.7"
     shallowequal "^1.1.0"
     side-effect-manager "^0.1.5"
     stylefire "^7.0.3"
-    value-enhancer "^0.0.7"
+    value-enhancer "^0.0.8"
 
 "@netless/tool-box@^0.1.6":
   version "0.1.6"
@@ -1966,15 +1966,15 @@
   resolved "https://registry.yarnpkg.com/@netless/video-js-plugin/-/video-js-plugin-0.3.7.tgz#6c1f174f20e8a93634e1770e7e535c1302bdf22b"
   integrity sha512-UG1t9464w1bZT9kzdhxj/K7R6jqI9sqYfqfUQJ2w9JRWsNibL6O16OC81iwBJT6nkGXEVN7z2pqHvNg1OhKppw==
 
-"@netless/window-manager@^0.3.5-canary.1":
-  version "0.3.5-canary.1"
-  resolved "https://registry.npmjs.org/@netless/window-manager/-/window-manager-0.3.5-canary.1.tgz#442aa2e442189d5dec4b80b45459f79d01118059"
-  integrity sha512-5uX2U8ak5GmT1kAmk8oLzBHjTuTZPx1YJDobRwkTZ9az5/htFHqrbBd8xqQLCN7zziyycnCGD4iWVB91ltmwgA==
+"@netless/window-manager@^0.3.10-canary.0":
+  version "0.3.10-canary.0"
+  resolved "https://registry.npmjs.org/@netless/window-manager/-/window-manager-0.3.10-canary.0.tgz#1f4a919cf9034165074731ca2ed657475142985c"
+  integrity sha512-nwIchQyKp4VqcwDBdkq4iyO8uweMZR692qFtq2bT7anaSEzSzyFB89MhrKq8OlJVTIU+EFUk4mSaU2D/lkTRTw==
   dependencies:
     "@juggle/resize-observer" "^3.3.1"
     "@netless/app-docs-viewer" "^0.1.21"
     "@netless/app-media-player" "0.1.0-beta.5"
-    "@netless/telebox-insider" "0.2.5"
+    "@netless/telebox-insider" "0.2.7"
     emittery "^0.9.2"
     lodash "^4.17.21"
     p-retry "^4.6.1"
@@ -7168,6 +7168,11 @@ electron-builder@^22.10.5:
     read-config-file "6.2.0"
     update-notifier "^5.1.0"
     yargs "^17.0.1"
+
+electron-devtools-vendor@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/electron-devtools-vendor/-/electron-devtools-vendor-1.0.2.tgz#b9ee38712154d2f9ebc27fd32ed183986ef877cc"
+  integrity sha512-6aUAyl/xLQqHF5ric2jfF/O7A50Cw0bjghdevm+uNMQPnpI1BXFIBFupMh62gfFU5xJDEMBqV54O+HjSh2AlWw==
 
 electron-notarize@^1.0.0:
   version "1.1.0"
@@ -14963,7 +14968,7 @@ shell-quote@1.7.2:
   resolved "https://registry.yarnpkg.com/shell-quote/-/shell-quote-1.7.2.tgz#67a7d02c76c9da24f99d20808fcaded0e0e04be2"
   integrity sha512-mRz/m/JVscCrkMyPqHc/bczi3OQHkLTqXHEFu0zDhK/qfv3UcOA4SVmRCLmos4bhjr9ekVQubj/R7waKapmiQg==
 
-shelljs@^0.8.3, shelljs@^0.8.4:
+shelljs@^0.8.3:
   version "0.8.4"
   resolved "https://registry.yarnpkg.com/shelljs/-/shelljs-0.8.4.tgz#de7684feeb767f8716b326078a8a00875890e3c2"
   integrity sha512-7gk3UZ9kOfPLIAbslLzyWeGiEqx9e3rxwZM0KE6EL8GlGwjym9Mrlx5/p33bWTu9YG6vcS4MBxYZDHYr5lr8BQ==
@@ -16797,10 +16802,10 @@ validator@^8.0.0:
   resolved "https://registry.yarnpkg.com/validator/-/validator-8.2.0.tgz#3c1237290e37092355344fef78c231249dab77b9"
   integrity sha512-Yw5wW34fSv5spzTXNkokD6S6/Oq92d8q/t14TqsS3fAiA1RYnxSFSIZ+CY3n6PGGRCq5HhJTSepQvFUS2QUDxA==
 
-value-enhancer@^0.0.7:
-  version "0.0.7"
-  resolved "https://registry.npmjs.org/value-enhancer/-/value-enhancer-0.0.7.tgz#b2440bc264ea8518653e367549762951cd1f46ca"
-  integrity sha512-Gns+pJcsv2+AXHf3p4l9Vry4wKYPb52a/YsGqJ7wOe1jXYqXetTL3p/9iwUPtFesJE3p7y80hX4HuX1tb6Hj1g==
+value-enhancer@^0.0.8:
+  version "0.0.8"
+  resolved "https://registry.npmjs.org/value-enhancer/-/value-enhancer-0.0.8.tgz#1e19655b678ddc3d93de61170e486e7f5b8e6f04"
+  integrity sha512-ba8Rcyp9ItqlLWoyZVqHGaEdY1tqP1mcbRhlOrCnIrDxdl8rKNH1Rq45syo4IMYNSkwC2oV9xBWcV9dmL14aQg==
   dependencies:
     side-effect-manager "^0.1.5"
 
@@ -17243,10 +17248,10 @@ which@^2.0.1, which@^2.0.2:
   dependencies:
     isexe "^2.0.0"
 
-white-web-sdk@2.15.4:
-  version "2.15.4"
-  resolved "https://registry.npmjs.org/white-web-sdk/-/white-web-sdk-2.15.4.tgz#d62a4d1e6f5245ded290f9ac5ce3236bba871bcf"
-  integrity sha512-AetBhpmHed3zF1hRu9UDmIwfYrW2R7N8DxSwvSsGKapCtH0gvEFsfxa/O2z+G+bWdqcpLSUiDNCXK/mXc81vfg==
+white-web-sdk@2.15.12:
+  version "2.15.12"
+  resolved "https://registry.npmjs.org/white-web-sdk/-/white-web-sdk-2.15.12.tgz#d113376ad77006ee9c4cb138e132eba7fbf0a1fd"
+  integrity sha512-CpuEmJf+RAp4cT8ot+FbgZNHqDjxreyaVDu4oUvI7qEC2iOSSb4BF6wvGKay0JFlXehGieBkehvnuLaFm9LDZg==
   dependencies:
     "@juggle/resize-observer" "^3.3.1"
     "@netless/canvas-polyfill" "^0.0.4"

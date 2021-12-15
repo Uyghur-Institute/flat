@@ -2,17 +2,18 @@ import { generateRoutePath, RouteNameType, usePushHistory } from "../../utils/ro
 import { roomStore } from "../../stores/room-store";
 import { RoomType } from "../../api-middleware/flatServer/constants";
 import { errorTips } from "../../components/Tips/ErrorTips";
+import { globalStore } from "../../stores/GlobalStore";
 
 export const joinRoomHandler = async (
     roomUUID: string,
-    _pushHistory: ReturnType<typeof usePushHistory>,
+    pushHistory: ReturnType<typeof usePushHistory>,
 ): Promise<void> => {
     try {
         const formatRoomUUID = roomUUID.replace(/\s+/g, "");
         const data = await roomStore.joinRoom(formatRoomUUID);
+        globalStore.updateShowGuide(data.showGuide);
         // try to work around chrome does not show permission popup after
         // soft navigating. here we do a "hard" navigating instead.
-        // @TODO make roomType a param
         switch (data.roomType) {
             case RoomType.BigClass: {
                 // pushHistory(RouteNameType.BigClassPage, data);
@@ -34,6 +35,7 @@ export const joinRoomHandler = async (
             }
         }
     } catch (e) {
+        pushHistory(RouteNameType.HomePage);
         errorTips(e);
     }
 };

@@ -84,10 +84,10 @@ const recordingConfig: RecordingConfig = Object.freeze({
 export type BigClassPageProps = {};
 
 export const BigClassPage = observer<BigClassPageProps>(function BigClassPage() {
-    const { t } = useTranslation();
+    const { i18n, t } = useTranslation();
     const params = useParams<RouteParams<RouteNameType.BigClassPage>>();
 
-    const classRoomStore = useClassRoomStore(params.roomUUID, params.ownerUUID, recordingConfig);
+    const classRoomStore = useClassRoomStore({ ...params, recordingConfig, i18n });
     const shareScreenStore = classRoomStore.shareScreenStore;
 
     const whiteboardStore = classRoomStore.whiteboardStore;
@@ -188,7 +188,10 @@ export const BigClassPage = observer<BigClassPageProps>(function BigClassPage() 
                 <div className="realtime-content">
                     <div className="container">
                         <ShareScreen shareScreenStore={shareScreenStore} />
-                        <Whiteboard whiteboardStore={whiteboardStore} />
+                        <Whiteboard
+                            whiteboardStore={whiteboardStore}
+                            classRoomStore={classRoomStore}
+                        />
                     </div>
                     {renderRealtimePanel()}
                 </div>
@@ -301,16 +304,9 @@ export const BigClassPage = observer<BigClassPageProps>(function BigClassPage() 
                     />
                 )}
 
-                {/* <TopBarRightBtn
-                    title="Docs center"
-                    icon="folder"
-                    onClick={whiteboardStore.toggleFileOpen}
-                /> */}
                 {/* TODO: open cloud-storage sub window */}
-                <CloudStorageButton whiteboard={whiteboardStore} />
+                <CloudStorageButton classroom={classRoomStore} />
                 <InviteButton roomInfo={classRoomStore.roomInfo} />
-                {/* @TODO implement Options menu */}
-                {/* <TopBarRightBtn title="Options" icon="options" onClick={() => {}} /> */}
                 <TopBarRightBtn
                     title="Exit"
                     icon="exit"
